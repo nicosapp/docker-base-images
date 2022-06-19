@@ -7,11 +7,12 @@ env:
 
 services: docker
 
-before install:
+before_install:
+  - ls -la
   - docker image build -t ${IMAGE_NAME} node/
 
 script:
-  - echo "it works"
+  - echo "image built"
 
 after_success:
   - docker login https://${DC_REPOSITORY} -u ${DC_USERNAME} -p ${DC_PASS}
