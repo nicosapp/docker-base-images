@@ -10,13 +10,10 @@ jobs:
 
   build_push_docker_images:
     runs-on: ubuntu-latest
-    env:
-      commit_message: ${{ github.event.head_commit.message }}
-    if: startsWith(${{ env.commit_message }}, 'build')
+    if: startsWith(github.event.head_commit.message, 'build')
     steps:
         - name: Set output
-          id: vars
-          run: echo "IMAGE_PATH=${github.event.head_commit.message/build:/}" >> $GITHUB_ENV
+          run: echo "IMAGE_PATH=${${{ github.event.head_commit.message}}/build:/}" >> $GITHUB_ENV
         - name: Set up Docker Buildx
           uses: docker/setup-buildx-action@v1
         - name: Login to Private Registry
