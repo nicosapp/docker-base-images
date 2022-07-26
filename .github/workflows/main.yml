@@ -13,7 +13,11 @@ jobs:
     if: startsWith(github.event.head_commit.message, 'build')
     steps:
         - name: Set output
-          run: echo "IMAGE_PATH=${${{ github.event.head_commit.message}}/build:/}" >> $GITHUB_ENV
+          run: |
+            message=${{github.event.head_commit.message}}
+            image_path=${message/build:/}
+            echo "IMAGE_PATH=$image_path" >> $GITHUB_ENV 
+            echo "Image to build: $image_path"
         - name: Set up Docker Buildx
           uses: docker/setup-buildx-action@v1
         - name: Login to Private Registry
@@ -29,4 +33,4 @@ jobs:
           with:
             push: true
             context: "{{defaultContext}}:${{ env.IMAGE_PATH }}"
-            tags: ${{ env.PRIVATE_REGISTRY }}${{ env.IMAGE_PATH }}:latest
+            tags: ${{ env.PRIVATE_REGISTRY }}/${{ env.IMAGE_PATH }}:latest
